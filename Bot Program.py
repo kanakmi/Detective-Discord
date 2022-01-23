@@ -1,5 +1,12 @@
 import discord
 import re
+import requests
+import wikipedia as wiki
+import pyjokes
+
+TOKEN = "PUT YOUR DISCORD BOT TOKEN HERE"
+NEWS_API = "PUT YOUR API KEY HERE"
+WEATHER_API = "PUT YOUR API KEY HERE"
 
 # Operations with the database
 import sqlite3
@@ -40,8 +47,6 @@ def delete_warning(id):
 
 # instantiate the bot    
 client = discord.Client()
-
-TOKEN = 'YOUR TOKEN HERE'
 
 # function to check if the string contains a url and return the url
 def contains_url(string):
@@ -92,6 +97,34 @@ def checkNitroScam(string):
     else:
         return False
 
+def NewsFromBBC(): 
+    main_url = "https://newsapi.org/v1/articles?source=bbc-news&sortBy=top&apiKey=" + NEWS_API
+    open_bbc_page = requests.get(main_url).json() 
+    article = open_bbc_page["articles"] 
+    results = [] 
+    for ar in article: 
+        results.append(ar["title"])
+        results.append("Read more - " + ar["url"])
+    return results[:10]
+
+def weatherDetails(city):
+    url = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + WEATHER_API
+    x = requests.get(url).json()
+    y = x["main"]
+    current_temperature = y["temp"]-273 
+    current_temperature = round(current_temperature, 2)
+    current_pressure = y["pressure"]
+    current_humidiy = y["humidity"]
+    z = x["weather"]
+    weather_description = z[0]["description"] 
+    return ("Weather in " + city.title() + 
+          "\nTemperature = " +
+                    str(current_temperature) + ' degree Celcius' +
+          "\nHumidity = " +
+                    str(current_humidiy) + '%' +
+          "\nDescription = " +
+                    str(weather_description)) 
+
 @client.event
 async def on_ready():
     print('Logged in as ' + str(client.user))
@@ -107,11 +140,66 @@ async def on_message(message):
         await message.delete()
         warnings = insert_warning(str(message.author))
         if warnings < 3:
-            await message.channel.send("{} has been warned for nitro scamming. They are now {} steps closer from getting banned.".format(message.author.mention, 3-warnings))
+            await message.channel.send("{} has been warned for nitro scamming. They are now {} warnings away from getting banned.".format(message.author.mention, 3-warnings))
         else:
             await message.channel.send("{} has been banned for nitro scamming.".format(message.author.mention))
             await message.author.send("You have been banned for nitro scamming. Please contact a staff member if you believe this is a mistake.")
             await message.author.ban()
+            delete_warning(str(message.author))
 
+    elif string.startswith('$reset_warn'):
+        roles = [role.name for role in message.author.roles]
+        print(roles)
+        if 'admin' not in roles and 'moderator' not in roles:
+            await message.channel.send("You do not have permission to use this command.")
+        else:
+            user = string.split()[1][3:-1]
+            user = await client.fetch_user(user)
+            res = delete_warning(str(user))
+            if res:
+                await message.channel.send("{} warnings have been reset.".format(user.mention))
+            else:
+                await message.channel.send("{} doesn't have any warnings.".format(user.mention))
+    
+    elif string.startswith('$news'):
+        await message.channel.send('News from BBC:')
+        news = NewsFromBBC()
+        for i in news:
+            await message.channel.send(i)
+
+    elif string.startswith('$weather'):
+        city = string[9:]
+        city = city.lower()
+        try:
+            weather = weatherDetails(city)
+            await message.channel.send(weather)
+        except:
+            await message.reply('City not found')
+
+    elif string.startswith('$joke'):
+        joke = pyjokes.get_joke()
+        await message.channel.send(joke)
+
+    elif string.startswith('$wiki'):
+        query = string[6:]
+        try:
+            result = wiki.summary(query, sentences=2)
+            await message.reply(result)
+        except:
+            await message.reply('Sorry! Search Key not found.')
+
+    elif string.startswith('$help'):
+        await message.channel.send("""
+        Commands:
+        $news - Get latest news from BBC
+        $weather <city> - Get weather in a city
+        $joke - Get a random joke
+        $wiki <search key> - Get a summary of a search key from Wikipedia
+        $help - Get this message
+        $reset_warn <user> - Reset warnings for a user (admin/moderator only)
+        """)
+
+    elif string.startswith('$'):
+        await message.channel.send('Invalid command!')
 
 client.run(TOKEN)
