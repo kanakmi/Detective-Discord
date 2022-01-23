@@ -76,7 +76,7 @@ def checkNitroScam(string):
         splitted = url[0].split("/")
         domain = splitted[2]
 
-        if(domain == "discord.gift" or domain == "discord.gg"):
+        if(domain == "discord.gift" or domain == "discord.gg" or domain == "discord.me" or domain == "discord.io" or domain == "discordapp.com/invite"):
             return False
 
         domainName = domain.split(".")[0]
