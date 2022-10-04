@@ -1,101 +1,126 @@
 import discord
+from discord import Option
+from discord.ext import commands
+from discord.ext.commands import MissingPermissions
 import re
 import requests
-import wikipedia as wiki
+import sqlite3
+import wikipedia
 import pyjokes
 
 TOKEN = "PUT YOUR DISCORD BOT TOKEN HERE"
 NEWS_API = "PUT YOUR API KEY HERE"
 WEATHER_API = "PUT YOUR API KEY HERE"
 
-# Operations with the database
-import sqlite3
+class warning:
+    def __init__(self):
+        self.conn = sqlite3.connect('users.db')
 
-conn = sqlite3.connect('users.db')
+        c = self.conn.cursor()
 
-c = conn.cursor()
+        try:
+            c.execute("""
+                        CREATE TABLE warnings (
+                            id text PRIMARY KEY,
+                            warnings int
+                        )
+                    """)
+            self.conn.commit()
 
-try:
-    c.execute("""CREATE TABLE warnings (
-                    id text PRIMARY KEY,
-                    warnings int
-    )""")
-    conn.commit()
+        except:
+            print("Table already exists")
 
-except:
-    print("Table already exists")
+        c.close()
 
-def insert_warning(id):
-    try:
-        c.execute("INSERT INTO warnings VALUES (?, 1)", (id,))
-        conn.commit()
-        return 1
-    except:
-        c.execute("UPDATE warnings SET warnings = warnings + 1 WHERE id = ?", (id,))
-        c.execute("SELECT warnings FROM warnings WHERE id = ?", (id,))
-        warnings = c.fetchone()[0]
-        conn.commit()
-        return warnings
+    def insertWarning(self, id):
+        c = self.conn.cursor()
+        try:
+            c.execute("INSERT INTO warnings VALUES (?, 1)", (id,))
+            self.conn.commit()
+            c.close()
+            return 1
+        except:
+            c.execute("UPDATE warnings SET warnings = warnings + 1 WHERE id = ?", (id,))
+            c.execute("SELECT warnings FROM warnings WHERE id = ?", (id,))
+            warnings = c.fetchone()[0]
+            self.conn.commit()
+            c.close()
+            return warnings
+    
+    def deleteWarning(self, id):
+        try:
+            c = self.conn.cursor()
+            c.execute("DELETE FROM warnings WHERE id = ?", (id,))
+            self.conn.commit()
+            c.close()
+            return True
+        except:
+            return False
 
-def delete_warning(id):
-    try:
-        c.execute("DELETE FROM warnings WHERE id = ?", (id,))
-        conn.commit()
-        return True
-    except:
-        return False
+data_obj = warning()
 
-# instantiate the bot    
-client = discord.Client()
+class NitroScam:
+    def __init__(self):
+        self.safe_domains = ["discord.gift", "discord.com", "discord.gg", "discord.me", "discord.io", "discordapp.com"]
+    
+    # function to check if the string contains a url and return the url
+    def __contains_url__(self, message):
+        return re.findall(r'(https?://\S+)', message)
+    
+    # Levenstien Distance
+    # function to check the number of insertions/deletions have to be done to make two strings identical
+    # lesser the number, more similar the strings are
+    def __similarity__(self, domain):
+        string2 = "discord"
+        m = len(domain)
+        n = 7
+        dp = [[0] * (n + 1) for _ in range(m + 1)]
+        for i in range(1, m + 1):
+            for j in range(1, n+1):
+                if domain[i-1] == string2[j-1]:
+                    dp[i][j] = dp[i-1][j-1] + 1
+                else:
+                    dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+        return (m+n)-(2*dp[m][n])
+    
+    def checkNitroScam(self, message):
+        url = self.__contains_url__(message)
 
-# function to check if the string contains a url and return the url
-def contains_url(string):
-    return re.findall(r'(https?://\S+)', string)
-
-# Levenstien Distance
-# function to check the number of insertions/deletions have to be done to make two strings identical
-# lesser the number, more similar the strings are
-def similarity(string1):
-    string2 = "discord"
-    m = len(string1)
-    n = 7
-    dp = [[0] * (n + 1) for _ in range(m + 1)]
-    for i in range(1, m + 1):
-        for j in range(1, n+1):
-            if string1[i-1] == string2[j-1]:
-                dp[i][j] = dp[i-1][j-1] + 1
-            else:
-                dp[i][j] = max(dp[i-1][j], dp[i][j-1])
-    return (m+n)-(2*dp[m][n])
-
-def checkNitroScam(string):
-    url = contains_url(string)
-
-    # check if the string contains a url
-    if(len(url) > 0):
+        # check if the string contains a url
+        if(len(url) == 0):
+            return 0
+        
         splitted = url[0].split("/")
         domain = splitted[2]
 
-        if(domain == "discord.gift" or domain == "discord.gg" or domain == "discord.me" or domain == "discord.io" or domain == "discordapp.com/invite"):
-            return False
+        # domain is safe
+        if domain in self.safe_domains:
+            return 0
 
         domainName = domain.split(".")[0]
 
         if(len(domainName)>6):
-            sim = similarity(domainName[:7])
+            sim = self.__similarity__(domainName[:7])
         else:
-            sim = similarity(domainName)
+            sim = self.__similarity__(domainName)
 
-        if sim < 4:
-            return True
+        if sim < 5:
+            return 1
         else:
-            trigger_words = ["nitro", "discord"]
-            if any(word in string for word in trigger_words):
-                return True
-            else:
-                return False
-    else:
-        return False
+            # if message contains a url and words discord and nitro, then it could be a scam
+            message = message.split()
+            if "discord" in message and "nitro" in message:
+                return 2
+    
+    def addSafeDomain(self, domain):
+        if domain not in self.safe_domains:
+            self.safe_domains.append(domain)
+    
+    def deleteSafeDomain(self, domain):
+        if domain in self.safe_domains:    
+            self.safe_domains.remove(domain)
+
+nitroscam_obj = NitroScam()
 
 def NewsFromBBC(): 
     main_url = "https://newsapi.org/v1/articles?source=bbc-news&sortBy=top&apiKey=" + NEWS_API
@@ -105,7 +130,9 @@ def NewsFromBBC():
     for ar in article: 
         results.append(ar["title"])
         results.append("Read more - " + ar["url"])
-    return results[:10]
+        if len(results) == 10:
+            break
+    return "\n".join(results)
 
 def weatherDetails(city):
     url = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + WEATHER_API
@@ -113,7 +140,6 @@ def weatherDetails(city):
     y = x["main"]
     current_temperature = y["temp"]-273 
     current_temperature = round(current_temperature, 2)
-    current_pressure = y["pressure"]
     current_humidiy = y["humidity"]
     z = x["weather"]
     weather_description = z[0]["description"] 
@@ -125,81 +151,128 @@ def weatherDetails(city):
           "\nDescription = " +
                     str(weather_description)) 
 
-@client.event
-async def on_ready():
-    print('Logged in as ' + str(client.user))
+def runMessageCommands():
+    intents = discord.Intents.default()
+    intents.message_content = True
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
+    client = discord.Client(intents=intents)
 
-    string = message.content
-    
-    if checkNitroScam(string):
-        await message.delete()
-        warnings = insert_warning(str(message.author))
-        if warnings < 3:
-            await message.channel.send("{} has been warned for nitro scamming. They are now {} warnings away from getting banned.".format(message.author.mention, 3-warnings))
-        else:
-            await message.channel.send("{} has been banned for nitro scamming.".format(message.author.mention))
-            await message.author.send("You have been banned for nitro scamming. Please contact a staff member if you believe this is a mistake.")
-            await message.author.ban()
-            delete_warning(str(message.author))
+    @client.event
+    async def on_ready():
+        print(f'We have logged in as {client.user}')
 
-    elif string.startswith('$reset_warn'):
-        roles = [role.name for role in message.author.roles]
-        print(roles)
-        if 'admin' not in roles and 'moderator' not in roles:
-            await message.channel.send("You do not have permission to use this command.")
-        else:
-            user = string.split()[1][3:-1]
-            user = await client.fetch_user(user)
-            res = delete_warning(str(user))
-            if res:
-                await message.channel.send("{} warnings have been reset.".format(user.mention))
-            else:
-                await message.channel.send("{} doesn't have any warnings.".format(user.mention))
-    
-    elif string.startswith('$news'):
-        await message.channel.send('News from BBC:')
-        news = NewsFromBBC()
-        for i in news:
-            await message.channel.send(i)
+    @client.event
+    async def on_message(message):
+        if message.author == client.user:
+            return
 
-    elif string.startswith('$weather'):
-        city = string[9:]
-        city = city.lower()
+        msg = message.content.lower()
+
+        x = nitroscam_obj.checkNitroScam(msg)
+        if x==1:
+            try:
+                await message.delete()
+                warnings = data_obj.insertWarning(str(message.author))
+                if warnings < 3:
+                    await message.channel.send("{} has been warned for nitro scamming. They are now {} warnings away from getting kicked.".format(message.author.mention, 3-warnings))
+                else:
+                    await message.channel.send("{} has been kicked for nitro scamming.".format(message.author.mention))
+                    await message.author.send("You have been kicked for nitro scamming. Please contact a staff member if you believe this is a mistake.")
+                    await message.author.kick()
+                    data_obj.deleteWarning(str(message.author))
+            except:
+                x=2
+
+        if x==2:
+            await message.reply("This seems like a nitro scam link. Please be cautious while opening it. Please contact a staff member if you believe this is a mistake.")
+
+    client.run(TOKEN)
+
+def runSlashCommands():
+    bot = discord.Bot()
+
+    @bot.event 
+    async def on_ready():
+        print(f"We've logged in as {bot.user}.")
+
+    # testing = [934343872232976384] #list of guild ids
+
+    @bot.slash_command(name = "wiki", description='Returns a Wikipedia summary')
+    async def wiki(ctx, searchkey: Option(str, description="What do you want to search on wikipedia?", required = True)):
         try:
-            weather = weatherDetails(city)
-            await message.channel.send(weather)
+            result = wikipedia.summary(searchkey, sentences=2)
+            try:
+                await ctx.respond(result)
+            except:
+                await ctx.send(result)
         except:
-            await message.reply('City not found')
+            await ctx.respond('Sorry! Search Key not found.')
 
-    elif string.startswith('$joke'):
+    @bot.slash_command(name = "joke", description='Returns a random joke')
+    async def joke(ctx):
         joke = pyjokes.get_joke()
-        await message.channel.send(joke)
+        await ctx.respond(joke)
 
-    elif string.startswith('$wiki'):
-        query = string[6:]
-        try:
-            result = wiki.summary(query, sentences=2)
-            await message.reply(result)
-        except:
-            await message.reply('Sorry! Search Key not found.')
+    @bot.slash_command(name = "news", description='Returns the top 5 news from BBC')
+    async def news(ctx):
+        news = NewsFromBBC()
+        await ctx.respond(news)
 
-    elif string.startswith('$help'):
-        await message.channel.send("""
-        Commands:
-        $news - Get latest news from BBC
-        $weather <city> - Get weather in a city
-        $joke - Get a random joke
-        $wiki <search key> - Get a summary of a search key from Wikipedia
-        $help - Get this message
-        $reset_warn <user> - Reset warnings for a user (admin/moderator only)
-        """)
+    @bot.slash_command(name = "weather", description='Returns the weather of a city')
+    async def weather(ctx, city: Option(str, description="Enter the name of the city", required = True)):
+        weather = weatherDetails(city)
+        await ctx.respond(weather)
 
-    elif string.startswith('$'):
-        await message.channel.send('Invalid command!')
+    @bot.slash_command(name="reset_warn", description="Reset warnings for a member")
+    @commands.has_permissions(ban_members = True)
+    async def reset_warn(ctx, member: Option(discord.Member, description="Member to reset warnings for", required = True)):
+        res = data_obj.deleteWarning(str(member))
+        if res:
+            await ctx.respond("Warnings for {} have been reset.".format(member.mention))
+        else:
+            await ctx.respond("No warnings for {}.".format(member.mention))
+    
+    @reset_warn.error
+    async def resetWarnError(ctx, error):
+        if isinstance(error, MissingPermissions):
+            await ctx.respond("You need Kick Members permissions to do this!")
+        else:
+            await ctx.respond("Something went wrong...")
 
-client.run(TOKEN)
+    @bot.slash_command(name="safe_domain", description="Add a domain to the safe domains list")
+    @commands.has_permissions(ban_members = True)
+    async def safe_domain(ctx, domain: Option(str, description="Domain to add to the safe domains list", required = True)):
+        nitroscam_obj.addSafeDomain(domain)
+        await ctx.respond("{} has been added to the safe domains list.".format(domain))
+    
+    @safe_domain.error
+    async def safeDomainError(ctx, error):
+        if isinstance(error, MissingPermissions):
+            await ctx.respond("You need Kick Members permissions to do this!")
+        else:
+            await ctx.respond("Something went wrong...")
+
+    @bot.slash_command(name="unsafe_domain", description="Remove a domain from the safe domains list")
+    @commands.has_permissions(ban_members = True)
+    async def unsafe_domain(ctx, domain: Option(str, description="Domain to remove from the safe domains list", required = True)):
+        nitroscam_obj.removeSafeDomain(domain)
+        await ctx.respond("{} has been removed from the safe domains list.".format(domain))
+    
+    @unsafe_domain.error
+    async def unsafeDomainError(ctx, error):
+        if isinstance(error, MissingPermissions):
+            await ctx.respond("You need Kick Members permissions to do this!")
+        else:
+            await ctx.respond("Something went wrong...")
+
+    bot.run(TOKEN)
+
+
+import multiprocessing
+
+if __name__ == "__main__":
+    process1 = multiprocessing.Process(target=runMessageCommands)
+    process2 = multiprocessing.Process(target=runSlashCommands)
+
+    process1.start()
+    process2.start()
