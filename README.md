@@ -89,7 +89,7 @@ For fetching the Wikipedia summary, the bot uses the Wikipedia python library. <
 ## Steps to contribute:
 
 - Drop a :star: on the Github repository (optional)<br/>
-- Search for an issue on the repo which you can sort out and get assigned to it
+- Search for an issue on the repo which you can contribute to and get it assigned to you. (You can also Open New Issues)
 - You can also make non-tech contributions by improving the readme or contribution guidelines files.
 - Refer <a href="https://github.com/kanakmi/Detective-Discord/blob/Version-2.0/CONTRIBUTING.md">Contribution Guidelines</a> for a detailed contribution guide.
 
