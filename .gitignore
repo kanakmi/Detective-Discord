@@ -1,0 +1,9 @@
+./env
+.env
+*.env
+./env/*
+/env
+./__pycache__
+/__pycache__
+users.db
+./users.db
