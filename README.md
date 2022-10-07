@@ -1,4 +1,9 @@
-# Detetective Discord
+<img src="https://socialify.git.ci/kanakmi/Detective-Discord/image?description=1&forks=1&issues=1&language=1&name=1&owner=1&pulls=1&stargazers=1&theme=Dark" />
+
+# Detetective Discord - 2.0
+
+## :new: Updates
+
 
 ## 💡 Inspiration
 Have you ever recieved a message like this?
