@@ -8,10 +8,13 @@ from warning_class import Warning
 from nitroscam_class import NitroScam
 import wikipedia
 import pyjokes
+from dotenv import load_dotenv
 
-TOKEN = "PUT YOUR DISCORD BOT TOKEN HERE"
-NEWS_API = "PUT YOUR API KEY HERE"
-WEATHER_API = "PUT YOUR API KEY HERE"
+load_dotenv()
+
+TOKEN = os.getenv("TOKEN")
+NEWS_API = os.getenv("NEWS_API")
+WEATHER_API = os.getenv("WEATHER_API")
 
 data_obj = Warning()
 
