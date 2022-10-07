@@ -9,7 +9,7 @@ from nitroscam_class import NitroScam
 import wikipedia
 import pyjokes
 from dotenv import load_dotenv
-
+import os
 load_dotenv()
 
 TOKEN = os.getenv("TOKEN")
@@ -106,6 +106,19 @@ def runSlashCommands():
         joke = pyjokes.get_joke()
         await ctx.respond(joke)
 
+    @bot.slash_command(name = "avatar", description='Returns mentioned user\'s avatar')
+    async def avatar(ctx,*,avamember:discord.Member = None):
+        if avamember == None:
+            embed = discord.Embed(description='User not specified ❌',
+                                  color=discord.Color.red())
+            await ctx.respond(embed=embed, mention_author=False)
+        else:
+            userAvatarUrl = avamember.avatar_url
+            embed = discord.Embed(title=('{}\'s Avatar'.format(avamember.name)),
+                                    colour=discord.Colour.red())
+            embed.set_image(url='{}'.format(userAvatarUrl))
+            await ctx.respond(embed=embed, mention_author=False)
+
     @bot.slash_command(name = "news", description='Returns the top 5 news from BBC')
     async def news(ctx):
         news = NewsFromBBC()
@@ -167,6 +180,7 @@ def runSlashCommands():
         embed = discord.Embed(title="Detective Discord", description="Detective Discord is a bot that helps you detect nitro scams and other malicious links. It also has some other useful commands.", color=0x00ff00)
         response = "`/wiki` - Returns a Wikipedia summary" + '\n' + \
                     "`/joke` - Returns a random joke" + '\n' + \
+                    "`/avatar` - Returns mentioned user's Avatar" + '\n' + \
                     "`/news` - Returns the top 5 news from BBC" + '\n' + \
                     "`/weather` - Returns the weather of a city" + '\n' + \
                     "`/reset_warn` - Reset warnings for a member (Admin/Mod only)" + '\n' + \
