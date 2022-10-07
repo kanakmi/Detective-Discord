@@ -2,7 +2,7 @@
 
 ## 💡 Innovation of the bot
 
-Have you ever got notified by a message like this?
+Have you ever received messages like these?
 
 <p align="center">
 <img width="30%" src="https://user-images.githubusercontent.com/54859521/150679129-0ac89bbb-6a90-43e4-96a5-c248b57e5544.png"/> <img width="31%" src="https://user-images.githubusercontent.com/54859521/150679357-43aa6388-4679-4a7b-b390-09a1cdba5508.png" />
@@ -13,18 +13,18 @@ But the newcomers out there don't have any idea about these links and fall into 
 
 ## 💻 What it does ?
 
-It's a bot that detects phishing links in discord messages, deletes them, warns the user who sent them and increase thier warning count by 1. Once the warning count hits 3, the user is kicked from the server and the user is also informed by the bot. <br>
-When the user is, the user is also informed by the bot for the same. <br>
+Detective Discord is a bot that detects phishing links in discord messages, deletes them, warns the user who sent them and increase thier warning count by 1. Once the warning count hits 3, the user is kicked from the server and is also informed by the bot for the same. <br>
 
+![kicked message](https://user-images.githubusercontent.com/54859521/194596490-32fa036b-adbd-4755-b934-c26e2b360f08.png)
 ![Member Kicked](https://user-images.githubusercontent.com/54859521/194545745-3b880a6a-e91e-499d-a797-1c96ab5528ac.png)
 
 If the bot is unable to delete the message due to missing permissions (not every server admin allows the bot to delete server messages), it replies to the message - <br>
 
 ![image](https://user-images.githubusercontent.com/54859521/194545318-c766d6b7-e87b-4f0c-84b0-71ed19e105f4.png)
 
-This way, it alerts the members of the server untill the Moderators eventually delete the message.
+This way, it alerts the members of the server and keeps them safe, untill the Moderators eventually delete the message.
 
-#### Some of the bot actions:
+#### Some of the bot's actions:
 
 - `/wiki` - Returns a Wikipedia summary
 
@@ -62,10 +62,10 @@ This way, it alerts the members of the server untill the Moderators eventually d
 
 The rules to detect phishing links are quite simple:
 
-- If the message includes any link
+- Check if the message includes any link. If not, simply return false.
 - Check if the link is not included in the safe domains list (stored in domains.db). Current links include _discord.gift, discord.com, discord.gg, discord.me, discord.io, discordapp.com_.
 - Calculate the [Levenshtein distance](https://en.wikipedia.org/wiki/Levenshtein_distance) between the message link and the real discord links.
-- If the distance is less than 5, the link is considered to be dangerous link.
+- If the distance is less than 5, the link is considered to be dangerous link, return true otherwise false.
 
 For fetching the News, the bot uses the BBC API. <br>
 For fetching the weather, the bot uses the OpenWeatherMap API. <br>
