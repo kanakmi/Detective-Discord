@@ -1,10 +1,5 @@
 ![GitHub Socialify](https://socialify.git.ci/kanakmi/Detective-Discord/image?description=1&forks=1&issues=1&language=1&name=1&owner=1&pattern=Plus&pulls=1&stargazers=1&theme=Dark)
 
-# Detetective Discord - 2.0
-
-## :new: Updates
-
-
 ## 💡 Inspiration
 Have you ever recieved a message like this?
 
@@ -13,50 +8,93 @@ Have you ever recieved a message like this?
 </p>
 
 If you have been on Discord for a while, I am sure you have been warned to stay away from these links. <br>
-But what about the newbies that are just starting out? <br>
-One of such incidents happend this thursday on my server. A bunch of people fell victim to such phishing links. <br>
-There was no such bots available in the market to solve this problem so I decided to make it on my own. <br>
+But the newcomers out there do not know much about these links and fall victims to such scams and loose access to their discord accounts.
 
 ## 💻 What it does
-Detective Discord is a bot that detects phishing links in Discord messages, deletes them, warns the user who sent them and increase thier warning count by 1. Once the warning count reaches 3, the user is banned from the server. <br>
-In case of a ban, the user is also informed by the bot for the same. <br>
+Detective Discord is a bot that detects phishing links in Discord messages, deletes them, warns the user who sent them and increase thier warning count by 1. Once the warning count reaches 3, the user is kicked from the server. <br>
+When the user is, the user is also informed by the bot for the same. <br>
 
-This bot can also perform a few other actions like:
-- $news - Get latest news from BBC
-- $weather <city> - Get weather in a city
-- $joke - Get a random joke
-- $wiki <search key> - Get a summary of a search key from Wikipedia
-- $help - Get this message
-- $reset_warn <user> - Reset warnings for a user (admin/moderator only)
+![Member Kicked](https://user-images.githubusercontent.com/54859521/194545745-3b880a6a-e91e-499d-a797-1c96ab5528ac.png)
 
-## ⚙️ How I built it
+If the bot is unable to delete the message due to missing permissions (not every server admin allows the bot to delete server messages), it replies to the message - <br>
+
+![image](https://user-images.githubusercontent.com/54859521/194545318-c766d6b7-e87b-4f0c-84b0-71ed19e105f4.png)
+
+This way, it alerts the members of the server untill the Moderators eventually delete the message.
+
+#### This bot can also perform a few other actions like:
+- `/wiki` - Returns a Wikipedia summary
+
+![wiki](https://user-images.githubusercontent.com/54859521/194546793-f4339a0c-0f54-4c4c-bc66-11df5adffe04.png)
+
+- `/joke` - Returns a random joke
+
+![joke](https://user-images.githubusercontent.com/54859521/194547247-661d59fa-d52d-4e86-a22c-bdaa13221e69.png)
+
+- `/news` - Returns the top 5 news from BBC
+
+![news](https://user-images.githubusercontent.com/54859521/194547431-b9d3bfb9-25d7-44d9-86d2-b04f9a19eb24.png)
+
+- `/weather` - Returns the weather of a city
+
+![weather](https://user-images.githubusercontent.com/54859521/194547554-817f4983-e4c2-4765-b2e4-272a6c786282.png)
+
+- `/help` - Returns all the commands the bot supports
+
+#### Few Admin/Mod only commands
+
+- `/reset_warn` - Reset warnings for a member
+
+![reset_warn](https://user-images.githubusercontent.com/54859521/194548071-43cecee9-a221-4cab-91de-1281403f5ab9.png)
+
+- `/safe_domain` - Add a domain to the safe domains list
+
+![image](https://user-images.githubusercontent.com/54859521/194548279-ce6002ea-1765-4803-a1dd-f79ed6941f7c.png)
+
+- `/unsafe_domain` - Remove a domain from the safe domains list
+
+![image](https://user-images.githubusercontent.com/54859521/194548588-a38f0a03-1935-4a63-9cdf-339af7881314.png)
+
+## ⚙️ Logic for Phishing Link detection
+
 The rules to detect phishing links are simple:
 - Check if the message contains a link.
-- Check if the link is not exactly the same as the real discord links like *discord.gg* or *discord.me*.
-- Calculate the Levenstien Distance between the link and the real discord links.
-- If the distance is less than 4, or the message contains words like *discord* or *nitro*, the link is considered to be phishing link.
+- Check if the link is not included in the safe domains list (stored in domains.db). Current links include *discord.gift, discord.com, discord.gg, discord.me, discord.io, discordapp.com*.
+- Calculate the Levenstien Distance between the message link and the real discord links.
+- If the distance is less than 5, the link is considered to be phishing link.
 
 For fetching the News, the bot uses the BBC API. <br>
 For fetching the weather, the bot uses the OpenWeatherMap API. <br>
 For fetching the jokes, the bot uses the pyjokes python library. <br>
 For fetching the Wikipedia summary, the bot uses the Wikipedia python library. <br>
-  
+
 ## ⚙️ Tech Stack
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) ![Discord](https://img.shields.io/badge/Discord.py-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white) ![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white) ![Wikipedia](https://img.shields.io/badge/Wikipedia-%23000000.svg?style=for-the-badge&logo=wikipedia&logoColor=white) 
 
-## 🧠 Challenges we ran into
-At first, I thought it would be a really simple task but as I started to build it, I realized it wasn't that easy after all. <br>
-Firstly I had to make the rules to identify phishing links. But I also had to make sure that the bot would not delete the links that are not phishing links. <br>
-After hovering over various methods, I settled on using the Levenstien Distance algorithm. <br>
-After that, when testing the bot I realized that the bot would also delete the links that were not phishing links but other discord links. <br>
-So I had to tweak the rules and make them inclusive to the other links. <br>
-Finally, I had a hard time deleting the user from the database who sent the phishing links. There was a bug that I wasn't able to detect and it took me 1 whole hour to fix it. <br>
+## Install and Run Locally
+- Python installation is required (contact me if you need help with that)
+- Clone the repo
+- Navigate to the project directory `cd Detective-Discord`
+- Create a virtual environment and activate it (optional)
+- Install the required libraries `pip install -r requirements.txt`
+- Create a `.env` file and add your discord bot TOKEN. Adding NEWS_API, WEATHER_API KEYS is optional. Remember to remove their commands if you wish to not include them.
+- Run the bot using command `python3 bot.py`  
 
-## 🏅 Accomplishments that we're proud of
-I am proud of the fact that I was able to build this bot in a day and that now my Server will no longer suffer from these phishing scams.
+## How to contribute:
 
-## 📖 What we learned
-This is the first time I have build a discord bot. I learnd how to use the discord.py library and how to use the discord.py API. <br>
+- Drop a :star: on the Github repository (optional)<br/>
+- Create an issue of the project or a feature you would like to add in the project and get the task assigned for youself. (Issue can be any feature that you think you could contribute to).
+- You can also make non-tech contributions by improving the readme or contribution guidelines files.
+- Refer <a href="https://github.com/kanakmi/Detective-Discord/blob/Version-2.0/CONTRIBUTING.md">Contribution Guidelines</a> for detailed contribution guide.
 
-## 🚀 What's next for Detetective Discord
-Setting a workflow to save the phishing links in the database and at the stroke of the midnight, report them through the appropriate channels. <br>
+## Contributors
+
+<a href="https://github.com/kanakmi/Detective-Discord/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=kanakmi/Detective-Discord&&max=817" />
+</a>
+
+## ❤️ Project Admin
+
+|                                     <a href="https://github.com/kanakmi"><img src="https://avatars.githubusercontent.com/u/54859521?v=4" width=150px height=150px /></a>                                      |
+| :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|                                                                                      **[Kanak Mittal](https://twitter.com/Kanakmi)**                                                                                    |
