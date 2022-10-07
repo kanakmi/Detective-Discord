@@ -2,9 +2,10 @@ import discord
 from discord import Option
 from discord.ext import commands
 from discord.ext.commands import MissingPermissions
-import re
+from discord.ui import Button, View
 import requests
-import sqlite3
+from warning_class import Warning
+from nitroscam_class import NitroScam
 import wikipedia
 import pyjokes
 
@@ -12,113 +13,7 @@ TOKEN = "PUT YOUR DISCORD BOT TOKEN HERE"
 NEWS_API = "PUT YOUR API KEY HERE"
 WEATHER_API = "PUT YOUR API KEY HERE"
 
-class warning:
-    def __init__(self):
-        self.conn = sqlite3.connect('users.db')
-
-        c = self.conn.cursor()
-
-        try:
-            c.execute("""
-                        CREATE TABLE warnings (
-                            id text PRIMARY KEY,
-                            warnings int
-                        )
-                    """)
-            self.conn.commit()
-
-        except:
-            print("Table already exists")
-
-        c.close()
-
-    def insertWarning(self, id):
-        c = self.conn.cursor()
-        try:
-            c.execute("INSERT INTO warnings VALUES (?, 1)", (id,))
-            self.conn.commit()
-            c.close()
-            return 1
-        except:
-            c.execute("UPDATE warnings SET warnings = warnings + 1 WHERE id = ?", (id,))
-            c.execute("SELECT warnings FROM warnings WHERE id = ?", (id,))
-            warnings = c.fetchone()[0]
-            self.conn.commit()
-            c.close()
-            return warnings
-    
-    def deleteWarning(self, id):
-        try:
-            c = self.conn.cursor()
-            c.execute("DELETE FROM warnings WHERE id = ?", (id,))
-            self.conn.commit()
-            c.close()
-            return True
-        except:
-            return False
-
-data_obj = warning()
-
-class NitroScam:
-    def __init__(self):
-        self.safe_domains = ["discord.gift", "discord.com", "discord.gg", "discord.me", "discord.io", "discordapp.com"]
-    
-    # function to check if the string contains a url and return the url
-    def __contains_url__(self, message):
-        return re.findall(r'(https?://\S+)', message)
-    
-    # Levenstien Distance
-    # function to check the number of insertions/deletions have to be done to make two strings identical
-    # lesser the number, more similar the strings are
-    def __similarity__(self, domain):
-        string2 = "discord"
-        m = len(domain)
-        n = 7
-        dp = [[0] * (n + 1) for _ in range(m + 1)]
-        for i in range(1, m + 1):
-            for j in range(1, n+1):
-                if domain[i-1] == string2[j-1]:
-                    dp[i][j] = dp[i-1][j-1] + 1
-                else:
-                    dp[i][j] = max(dp[i-1][j], dp[i][j-1])
-        return (m+n)-(2*dp[m][n])
-    
-    def checkNitroScam(self, message):
-        url = self.__contains_url__(message)
-
-        # check if the string contains a url
-        if(len(url) == 0):
-            return 0
-        
-        splitted = url[0].split("/")
-        domain = splitted[2]
-
-        # domain is safe
-        if domain in self.safe_domains:
-            return 0
-
-        domainName = domain.split(".")[0]
-
-        if(len(domainName)>6):
-            sim = self.__similarity__(domainName[:7])
-        else:
-            sim = self.__similarity__(domainName)
-
-        if sim < 5:
-            return 1
-        else:
-            # if message contains a url and words discord and nitro, then it could be a scam
-            message = message.split()
-            if "discord" in message and "nitro" in message:
-                return 2
-    
-    def addSafeDomain(self, domain):
-        if domain not in self.safe_domains:
-            self.safe_domains.append(domain)
-    
-    def deleteSafeDomain(self, domain):
-        if domain in self.safe_domains:    
-            self.safe_domains.remove(domain)
+data_obj = Warning()
 
 nitroscam_obj = NitroScam()
 
@@ -143,8 +38,7 @@ def weatherDetails(city):
     current_humidiy = y["humidity"]
     z = x["weather"]
     weather_description = z[0]["description"] 
-    return ("Weather in " + city.title() + 
-          "\nTemperature = " +
+    return ("Temperature = " +
                     str(current_temperature) + ' degree Celcius' +
           "\nHumidity = " +
                     str(current_humidiy) + '%' +
@@ -195,16 +89,12 @@ def runSlashCommands():
     async def on_ready():
         print(f"We've logged in as {bot.user}.")
 
-    # testing = [934343872232976384] #list of guild ids
-
     @bot.slash_command(name = "wiki", description='Returns a Wikipedia summary')
     async def wiki(ctx, searchkey: Option(str, description="What do you want to search on wikipedia?", required = True)):
         try:
             result = wikipedia.summary(searchkey, sentences=2)
-            try:
-                await ctx.respond(result)
-            except:
-                await ctx.send(result)
+            embed = discord.Embed(title=searchkey, description=result, color=0x00ff00)
+            await ctx.respond(embed=embed)
         except:
             await ctx.respond('Sorry! Search Key not found.')
 
@@ -216,12 +106,14 @@ def runSlashCommands():
     @bot.slash_command(name = "news", description='Returns the top 5 news from BBC')
     async def news(ctx):
         news = NewsFromBBC()
-        await ctx.respond(news)
+        embed = discord.Embed(title="Top News from BBC", description=news, color=0x00ff00)
+        await ctx.respond(embed=embed)
 
     @bot.slash_command(name = "weather", description='Returns the weather of a city')
     async def weather(ctx, city: Option(str, description="Enter the name of the city", required = True)):
         weather = weatherDetails(city)
-        await ctx.respond(weather)
+        embed = discord.Embed(title=f"Weather in {city.title()}", description=weather, color=0x00ff00)
+        await ctx.respond(embed = embed)
 
     @bot.slash_command(name="reset_warn", description="Reset warnings for a member")
     @commands.has_permissions(ban_members = True)
@@ -265,8 +157,26 @@ def runSlashCommands():
         else:
             await ctx.respond("Something went wrong...")
 
-    bot.run(TOKEN)
+    @bot.slash_command(name="help", description="Know more about the commands of bot")
+    async def help(ctx):
+        github = Button(label='Star on Github', style=discord.ButtonStyle.success, url='https://github.com/kanakmi/Detective-Discord', emoji='⭐')
+        twitter = Button(label='Follow on Twitter', style=discord.ButtonStyle.blurple, url='https://twitter.com/kanakmi', emoji='🐦')
+        embed = discord.Embed(title="Detective Discord", description="Detective Discord is a bot that helps you detect nitro scams and other malicious links. It also has some other useful commands.", color=0x00ff00)
+        response = "`/wiki` - Returns a Wikipedia summary" + '\n' + \
+                    "`/joke` - Returns a random joke" + '\n' + \
+                    "`/news` - Returns the top 5 news from BBC" + '\n' + \
+                    "`/weather` - Returns the weather of a city" + '\n' + \
+                    "`/reset_warn` - Reset warnings for a member (Admin/Mod only)" + '\n' + \
+                    "`/safe_domain` - Add a domain to the safe domains list (Admin/Mod only)" + '\n' + \
+                    "`/unsafe_domain` - Remove a domain from the safe domains list (Admin/Mod only)" + '\n' + \
+                    "`/help` - Get this message"
+        embed.add_field(name="Commands", value=response, inline=False)
+        view = View()
+        view.add_item(github)
+        view.add_item(twitter)
+        await ctx.respond(embed=embed, view=view)
 
+    bot.run(TOKEN)
 
 import multiprocessing
 
