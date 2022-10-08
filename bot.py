@@ -10,7 +10,7 @@ import wikipedia
 import pyjokes
 import os
 from dotenv import load_dotenv
-
+import os
 load_dotenv()
 
 TOKEN = os.getenv("TOKEN")
@@ -107,6 +107,23 @@ def runSlashCommands():
         joke = pyjokes.get_joke()
         await ctx.respond(joke)
 
+    @bot.slash_command(name = "avatar", description='Returns mentioned user\'s avatar')
+    async def avatar(ctx, avamember: Option(discord.Member, description="The member whose avatar you want to see.", required = False)):
+        try:
+            if avamember == None:
+                userAvatarUrl = ctx.author.avatar.url
+                name = ctx.author.name
+                
+            else:
+                userAvatarUrl = avamember.avatar.url
+                name = avamember.name
+            embed = discord.Embed(title=('{}\'s Avatar'.format(name)),colour=discord.Colour.green())
+            embed.set_image(url='{}'.format(userAvatarUrl))
+            await ctx.respond(embed=embed)
+        except:
+            embed = discord.Embed(description='User has no Avatar ❌',color=discord.Color.red())
+            await ctx.respond(embed=embed)
+
     @bot.slash_command(name = "news", description='Returns the top 5 news from BBC')
     async def news(ctx):
         news = NewsFromBBC()
@@ -168,6 +185,7 @@ def runSlashCommands():
         embed = discord.Embed(title="Detective Discord", description="Detective Discord is a bot that helps you detect nitro scams and other malicious links. It also has some other useful commands.", color=0x00ff00)
         response = "`/wiki` - Returns a Wikipedia summary" + '\n' + \
                     "`/joke` - Returns a random joke" + '\n' + \
+                    "`/avatar` - Returns mentioned user's Avatar" + '\n' + \
                     "`/news` - Returns the top 5 news from BBC" + '\n' + \
                     "`/weather` - Returns the weather of a city" + '\n' + \
                     "`/reset_warn` - Reset warnings for a member (Admin/Mod only)" + '\n' + \
