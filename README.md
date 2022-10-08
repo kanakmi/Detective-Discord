@@ -102,6 +102,9 @@ For fetching the Wikipedia summary, the bot uses the Wikipedia python library. <
 <a href="https://github.com/kanakmi/Detective-Discord/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=kanakmi/Detective-Discord&&max=817" />
 </a>
+<a href="https://github.com/Divyanshu960/Divyanshu960/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Divyanshu960/Divyanshu960" />
+</a>
 
 ## ❤️ Project Admin
 
