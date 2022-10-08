@@ -107,14 +107,20 @@ def runSlashCommands():
         await ctx.respond(joke)
 
     @bot.slash_command(name = "avatar", description='Returns mentioned user\'s avatar')
-   async def avatar(ctx,*,avamember:discord.Member = None):
-        if avamember == None:
-            embed = discord.Embed(description='User not specified ❌',color=discord.Color.red())
-            await ctx.respond(embed=embed)
-        else:
-            userAvatarUrl = avamember.avatar.url
-            embed = discord.Embed(title=('{}\'s Avatar'.format(avamember.name)),colour=discord.Colour.red())
+    async def avatar(ctx, avamember: Option(discord.Member, description="The member whose avatar you want to see.", required = False)):
+        try:
+            if avamember == None:
+                userAvatarUrl = ctx.author.avatar.url
+                name = ctx.author.name
+                
+            else:
+                userAvatarUrl = avamember.avatar.url
+                name = avamember.name
+            embed = discord.Embed(title=('{}\'s Avatar'.format(name)),colour=discord.Colour.green())
             embed.set_image(url='{}'.format(userAvatarUrl))
+            await ctx.respond(embed=embed)
+        except:
+            embed = discord.Embed(description='User has no Avatar ❌',color=discord.Color.red())
             await ctx.respond(embed=embed)
 
     @bot.slash_command(name = "news", description='Returns the top 5 news from BBC')
