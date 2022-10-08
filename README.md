@@ -13,7 +13,7 @@ But the newcomers out there don't have any idea about these links and fall into 
 
 ## 💻 What it does ?
 
-Detective Discord is a bot that detects phishing links in discord messages, deletes them, warns the user who sent them and increase thier warning count by 1. Once the warning count hits 3, the user is kicked from the server and is also informed by the bot for the same. <br>
+Detective Discord is a bot that detects phishing links in discord messages, deletes them, warns the user who sent them and increase their warning count by 1. Once the warning count hits 3, the user is kicked from the server and is also informed by the bot for the same. <br>
 
 ![kicked message](https://user-images.githubusercontent.com/54859521/194596490-32fa036b-adbd-4755-b934-c26e2b360f08.png)
 ![Member Kicked](https://user-images.githubusercontent.com/54859521/194545745-3b880a6a-e91e-499d-a797-1c96ab5528ac.png)
