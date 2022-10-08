@@ -8,6 +8,7 @@ from warning_class import Warning
 from nitroscam_class import NitroScam
 import wikipedia
 import pyjokes
+import os
 from dotenv import load_dotenv
 
 load_dotenv()

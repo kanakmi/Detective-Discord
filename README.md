@@ -81,7 +81,7 @@ For fetching the Wikipedia summary, the bot uses the Wikipedia python library. <
 - Python installation is required (contact if help needed)
 - Clone the repository
 - Navigate to the project directory `cd Detective-Discord`
-- Create a virtual environment and activate it (optional)
+- Create a virtual environment and activate it (optional) (creation: `python/python3 -m venv env`)
 - Install the required libraries `pip install -r requirements.txt`
 - Create a `.env` file and add your discord bot TOKEN. Adding NEWS_API, WEATHER_API KEYS is optional. Remember to remove their commands if you wish to not include them.
 - Run the bot using command `python3 bot.py`
