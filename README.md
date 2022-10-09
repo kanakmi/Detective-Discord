@@ -34,6 +34,10 @@ This way, it alerts the members of the server and keeps them safe, untill the Mo
 
 ![joke](https://user-images.githubusercontent.com/54859521/194547247-661d59fa-d52d-4e86-a22c-bdaa13221e69.png)
 
+-`/dadjoke` - Returns a dad joke
+
+![dadjoke](https://user-images.githubusercontent.com/72182690/194780049-7aa12d9e-687b-451d-aa78-f5e98ee1c286.png)
+
 - `/avatar` - Returns mentioned user's Avatar
 
 ![avatar](https://user-images.githubusercontent.com/72182690/194627771-4c53435f-241b-433a-b803-c92e15145ab5.png)
