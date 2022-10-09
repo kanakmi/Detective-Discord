@@ -106,7 +106,14 @@ def runSlashCommands():
     async def joke(ctx):
         joke = pyjokes.get_joke()
         await ctx.respond(joke)
-
+        
+    @bot.slash_command(name="dadjoke", description='Returns a dad joke')
+    async def dadjoke(ctx):
+        response = requests.get('https://backend-omega-seven.vercel.app/api/getjoke')
+        joke = json.loads(response.text)
+        dad = str(joke).strip("[]{}").replace(":", ",", 2).replace(":", ",", 2).split(",")
+        await ctx.respond(f"**{dad[1]}**\n\n||{dad[3]}||")
+        
     @bot.slash_command(name = "avatar", description='Returns mentioned user\'s avatar')
     async def avatar(ctx, avamember: Option(discord.Member, description="The member whose avatar you want to see.", required = False)):
         try:
@@ -185,6 +192,7 @@ def runSlashCommands():
         embed = discord.Embed(title="Detective Discord", description="Detective Discord is a bot that helps you detect nitro scams and other malicious links. It also has some other useful commands.", color=0x00ff00)
         response = "`/wiki` - Returns a Wikipedia summary" + '\n' + \
                     "`/joke` - Returns a random joke" + '\n' + \
+                    "`/dadjoke` - Returns a dadjoke" + '\n' + \
                     "`/avatar` - Returns mentioned user's Avatar" + '\n' + \
                     "`/news` - Returns the top 5 news from BBC" + '\n' + \
                     "`/weather` - Returns the weather of a city" + '\n' + \
