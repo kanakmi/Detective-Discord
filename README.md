@@ -1,12 +1,13 @@
 ![GitHub Socialify](https://socialify.git.ci/kanakmi/Detective-Discord/image?description=1&forks=1&issues=1&language=1&name=1&owner=1&pattern=Plus&pulls=1&stargazers=1&theme=Dark)
 
-- ### Add it to your server now by [visiting this link](https://discord.com/api/oauth2/authorize?client_id=934344337171554314&permissions=1376537242626&scope=bot%20applications.commands) 🔗🔗
+<div align="center">
+<h3><a href="https://discord.com/api/oauth2/authorize?client_id=934344337171554314&permissions=1376537242626&scope=bot%20applications.commands">Add it to your server now</a> 🔗🔗</h3>
+</div>
 
-**To get started with contributing to this project check out [Steps to Contribute](https://github.com/kanakmi/Detective-Discord#steps-to-contribute). To set-up the project locally check out [ Install and Run Locally ](https://github.com/kanakmi/Detective-Discord#install-and-run-locally)**
+- **To get started with contributing to this project check out [Steps to Contribute](https://github.com/kanakmi/Detective-Discord#steps-to-contribute).** 
+- **To set-up the project locally check out [ Install and Run Locally ](https://github.com/kanakmi/Detective-Discord#install-and-run-locally)**
 
-</br>
-
-## 💡 IMPETUS FOR THE BOT
+## 💡 Bot's Innovation
 
 Have you ever received messages like these?
 
@@ -21,26 +22,18 @@ But the newcomers out there don't have any idea about these links and fall into 
 
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) ![Discord](https://img.shields.io/badge/Discord.py-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white) ![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white) ![Wikipedia](https://img.shields.io/badge/Wikipedia-%23000000.svg?style=for-the-badge&logo=wikipedia&logoColor=white)
 
-</br>
-
-## 💻 What does it do ?
-
-</br>
+## 💻 What exactly does it do?
 
 Detective Discord is a bot that detects phishing links in discord messages, deletes them, warns the user who sent them, and increases their warning count by 1. Once the warning count hits 3, the user is kicked from the server and is also informed by the bot of the same. <br>
 
 ![kicked message](https://user-images.githubusercontent.com/54859521/194596490-32fa036b-adbd-4755-b934-c26e2b360f08.png)
 ![Member Kicked](https://user-images.githubusercontent.com/54859521/194545745-3b880a6a-e91e-499d-a797-1c96ab5528ac.png)
 
-</br>
-
 If the bot is unable to delete the message due to missing permissions (not every server admin allows the bot to delete server messages), it replies to the message - <br>
 
 ![image](https://user-images.githubusercontent.com/54859521/194545318-c766d6b7-e87b-4f0c-84b0-71ed19e105f4.png)
 
 This way, it alerts the members of the server and keeps them safe, until the Moderators eventually delete the message.
-
-</br>
 
 ### 🤖 BOT ACTIONS :
 
@@ -70,8 +63,6 @@ This way, it alerts the members of the server and keeps them safe, until the Mod
 
 - **`/help`** - Returns all the commands that the bot supports
 
-</br>
-
 ### Admin / Mod commands
 
 - **`/reset_warn`** - Reset warnings for a member
@@ -85,8 +76,6 @@ This way, it alerts the members of the server and keeps them safe, until the Mod
 - **`/unsafe_domain`** - Remove a domain from the safe domains list
 
 ![image](https://user-images.githubusercontent.com/54859521/194548588-a38f0a03-1935-4a63-9cdf-339af7881314.png)
-
-</br>
 
 ## ⚙️ Logic for Phishing Link Detection
 
@@ -102,8 +91,6 @@ For fetching the weather, the bot uses the OpenWeatherMap API. <br>
 For fetching the jokes, the bot uses the pyjokes python library. <br>
 For fetching the Wikipedia summary, the bot uses the Wikipedia python library. <br>
 
-</br>
-
 ## Install and Run Locally
 
 - Python installation is required (contact if help is needed)
@@ -114,8 +101,6 @@ For fetching the Wikipedia summary, the bot uses the Wikipedia python library. <
 - Create a `.env` file and add your discord bot TOKEN. Adding NEWS_API, WEATHER_API KEYS is optional. Remember to remove their commands if you wish to not include them.
 - Run the bot using the command `python3 bot.py`
 
-</br>
-
 ## Steps to contribute:
 
 - Drop a :star: on the Github repository (optional)<br/>
@@ -123,15 +108,11 @@ For fetching the Wikipedia summary, the bot uses the Wikipedia python library. <
 - You can also make non-tech contributions by improving the readme or contribution guidelines files.
 - Refer to <a href="https://github.com/kanakmi/Detective-Discord/blob/Version-2.0/CONTRIBUTING.md">Contribution Guidelines</a> for a detailed contribution guide.
 
-</br>
-
 ## Contributors
 
 <a href="https://github.com/kanakmi/Detective-Discord/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=kanakmi/Detective-Discord&&max=817" />
 </a>
-
-</br>
 
 ## ❤️ Project Admin
 
