@@ -10,7 +10,7 @@ import wikipedia
 import pyjokes
 import os
 from dotenv import load_dotenv
-import os
+import json
 load_dotenv()
 
 TOKEN = os.getenv("TOKEN")
