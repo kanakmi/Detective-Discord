@@ -15,7 +15,7 @@ Have you ever received messages like these?
 </p>
 
 If you have been on Discord for a while, I am sure you have been warned to stay away from these links. <br>
-But the newcomers out there don't have any idea about these links and fall into such scams and loose access to their discord accounts.
+But the newcomers out there don't have any idea about these links and fall into such scams and lose access to their discord accounts.
 
 ## ⚙️ Tech Stack
 
@@ -23,11 +23,11 @@ But the newcomers out there don't have any idea about these links and fall into 
 
 </br>
 
-## 💻 What it does ?
+## 💻 What does it do ?
 
 </br>
 
-Detective Discord is a bot that detects phishing links in discord messages, deletes them, warns the user who sent them and increase their warning count by 1. Once the warning count hits 3, the user is kicked from the server and is also informed by the bot for the same. <br>
+Detective Discord is a bot that detects phishing links in discord messages, deletes them, warns the user who sent them, and increases their warning count by 1. Once the warning count hits 3, the user is kicked from the server and is also informed by the bot of the same. <br>
 
 ![kicked message](https://user-images.githubusercontent.com/54859521/194596490-32fa036b-adbd-4755-b934-c26e2b360f08.png)
 ![Member Kicked](https://user-images.githubusercontent.com/54859521/194545745-3b880a6a-e91e-499d-a797-1c96ab5528ac.png)
@@ -38,11 +38,11 @@ If the bot is unable to delete the message due to missing permissions (not every
 
 ![image](https://user-images.githubusercontent.com/54859521/194545318-c766d6b7-e87b-4f0c-84b0-71ed19e105f4.png)
 
-This way, it alerts the members of the server and keeps them safe, untill the Moderators eventually delete the message.
+This way, it alerts the members of the server and keeps them safe, until the Moderators eventually delete the message.
 
 </br>
 
-### BOT ACTIONS:
+### 🤖 BOT ACTIONS :
 
 - **`/weather`** - Returns the weather of a city
 
@@ -88,14 +88,14 @@ This way, it alerts the members of the server and keeps them safe, untill the Mo
 
 </br>
 
-## ⚙️ Logic for Phishing Link detection
+## ⚙️ Logic for Phishing Link Detection
 
 The rules to detect phishing links are quite simple:
 
-- Check if the message includes any link. If not, simply return false.
+- Check if the message includes any links. If not, simply return false.
 - Check if the link is not included in the safe domains list (stored in domains.db). Current links include _discord.gift, discord.com, discord.gg, discord.me, discord.io, discordapp.com_.
 - Calculate the [Levenshtein distance](https://en.wikipedia.org/wiki/Levenshtein_distance) between the message link and the real discord links.
-- If the distance is less than 5, the link is considered to be dangerous link, return true otherwise false.
+- If the distance is less than 5, the link is considered to be a dangerous link, return true otherwise false.
 
 For fetching the News, the bot uses the BBC API. <br>
 For fetching the weather, the bot uses the OpenWeatherMap API. <br>
@@ -106,13 +106,13 @@ For fetching the Wikipedia summary, the bot uses the Wikipedia python library. <
 
 ## Install and Run Locally
 
-- Python installation is required (contact if help needed)
+- Python installation is required (contact if help is needed)
 - Clone the repository
 - Navigate to the project directory `cd Detective-Discord`
 - Create a virtual environment and activate it (optional) (creation: `python/python3 -m venv env`)
 - Install the required libraries `pip install -r requirements.txt`
 - Create a `.env` file and add your discord bot TOKEN. Adding NEWS_API, WEATHER_API KEYS is optional. Remember to remove their commands if you wish to not include them.
-- Run the bot using command `python3 bot.py`
+- Run the bot using the command `python3 bot.py`
 
 </br>
 
@@ -121,7 +121,7 @@ For fetching the Wikipedia summary, the bot uses the Wikipedia python library. <
 - Drop a :star: on the Github repository (optional)<br/>
 - Search for an issue on the repo which you can contribute to and get it assigned to you. (You can also Open New Issues)
 - You can also make non-tech contributions by improving the readme or contribution guidelines files.
-- Refer <a href="https://github.com/kanakmi/Detective-Discord/blob/Version-2.0/CONTRIBUTING.md">Contribution Guidelines</a> for a detailed contribution guide.
+- Refer to <a href="https://github.com/kanakmi/Detective-Discord/blob/Version-2.0/CONTRIBUTING.md">Contribution Guidelines</a> for a detailed contribution guide.
 
 </br>
 
