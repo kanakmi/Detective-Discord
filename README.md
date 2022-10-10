@@ -26,9 +26,17 @@ This way, it alerts the members of the server and keeps them safe, untill the Mo
 
 #### Some of the bot's actions:
 
+- `/weather` - Returns the weather of a city
+
+![weather](https://user-images.githubusercontent.com/54859521/194547554-817f4983-e4c2-4765-b2e4-272a6c786282.png)
+
 - `/wiki` - Returns a Wikipedia summary
 
 ![wiki](https://user-images.githubusercontent.com/54859521/194546793-f4339a0c-0f54-4c4c-bc66-11df5adffe04.png)
+
+- `/news` - Returns the top 5 news from BBC
+
+![news](https://user-images.githubusercontent.com/54859521/194547431-b9d3bfb9-25d7-44d9-86d2-b04f9a19eb24.png)
 
 - `/joke` - Returns a random joke
 
@@ -41,14 +49,6 @@ This way, it alerts the members of the server and keeps them safe, untill the Mo
 - `/avatar` - Returns mentioned user's Avatar
 
 ![avatar](https://user-images.githubusercontent.com/72182690/194627771-4c53435f-241b-433a-b803-c92e15145ab5.png)
-
-- `/news` - Returns the top 5 news from BBC
-
-![news](https://user-images.githubusercontent.com/54859521/194547431-b9d3bfb9-25d7-44d9-86d2-b04f9a19eb24.png)
-
-- `/weather` - Returns the weather of a city
-
-![weather](https://user-images.githubusercontent.com/54859521/194547554-817f4983-e4c2-4765-b2e4-272a6c786282.png)
 
 - `/help` - Returns all the commands that the bot supports
 
