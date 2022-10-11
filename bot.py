@@ -22,32 +22,35 @@ data_obj = Warning()
 nitroscam_obj = NitroScam()
 
 def NewsFromBBC(): 
-    main_url = "https://newsapi.org/v1/articles?source=bbc-news&sortBy=top&apiKey=" + NEWS_API
-    open_bbc_page = requests.get(main_url).json() 
-    article = open_bbc_page["articles"] 
-    results = [] 
+    main_url = f"https://newsapi.org/v1/articles?source=bbc-news&sortBy=top&apiKey={NEWS_API}"
+
+    open_bbc_page = requests.get(main_url).json()
+    article = open_bbc_page["articles"]
+    results = []
     for ar in article: 
-        results.append(ar["title"])
-        results.append("Read more - " + ar["url"])
+        results.extend((ar["title"], "Read more - " + ar["url"]))
         if len(results) == 10:
             break
     return "\n".join(results)
 
 def weatherDetails(city):
-    url = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + WEATHER_API
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={WEATHER_API}"
+
     x = requests.get(url).json()
     y = x["main"]
-    current_temperature = y["temp"]-273 
-    current_temperature = round(current_temperature, 2)
+    current_temperature = y["temp"]-273
     current_humidiy = y["humidity"]
     z = x["weather"]
-    weather_description = z[0]["description"] 
-    return ("Temperature = " +
-                    str(current_temperature) + ' degree Celcius' +
-          "\nHumidity = " +
-                    str(current_humidiy) + '%' +
-          "\nDescription = " +
-                    str(weather_description)) 
+    weather_description = z[0]["description"]
+    current_temperature = round(current_temperature, 2)
+    return (
+        f"Temperature = {str(current_temperature)} degree Celcius"
+        + "\nHumidity = "
+        + str(current_humidiy)
+        + '%'
+        + "\nDescription = "
+        + str(weather_description)
+    ) 
 
 def runMessageCommands():
     intents = discord.Intents.default()
@@ -106,21 +109,21 @@ def runSlashCommands():
     async def joke(ctx):
         joke = pyjokes.get_joke()
         await ctx.respond(joke)
-        
+
     @bot.slash_command(name="dadjoke", description='Returns a dad joke')
     async def dadjoke(ctx):
         response = requests.get('https://backend-omega-seven.vercel.app/api/getjoke')
         joke = json.loads(response.text)
         dad = str(joke).strip("[]{}").replace(":", ",", 2).replace(":", ",", 2).split(",")
         await ctx.respond(f"**{dad[1]}**\n\n||{dad[3]}||")
-        
+
     @bot.slash_command(name = "avatar", description='Returns mentioned user\'s avatar')
     async def avatar(ctx, avamember: Option(discord.Member, description="The member whose avatar you want to see.", required = False)):
         try:
-            if avamember == None:
+            if avamember is None:
                 userAvatarUrl = ctx.author.avatar.url
                 name = ctx.author.name
-                
+
             else:
                 userAvatarUrl = avamember.avatar.url
                 name = avamember.name
@@ -151,7 +154,7 @@ def runSlashCommands():
             await ctx.respond("Warnings for {} have been reset.".format(member.mention))
         else:
             await ctx.respond("No warnings for {}.".format(member.mention))
-    
+
     @reset_warn.error
     async def resetWarnError(ctx, error):
         if isinstance(error, MissingPermissions):
@@ -164,7 +167,7 @@ def runSlashCommands():
     async def safe_domain(ctx, domain: Option(str, description="Domain to add to the safe domains list", required = True)):
         nitroscam_obj.addSafeDomain(domain)
         await ctx.respond("{} has been added to the safe domains list.".format(domain))
-    
+
     @safe_domain.error
     async def safeDomainError(ctx, error):
         if isinstance(error, MissingPermissions):
@@ -177,7 +180,7 @@ def runSlashCommands():
     async def unsafe_domain(ctx, domain: Option(str, description="Domain to remove from the safe domains list", required = True)):
         nitroscam_obj.removeSafeDomain(domain)
         await ctx.respond("{} has been removed from the safe domains list.".format(domain))
-    
+
     @unsafe_domain.error
     async def unsafeDomainError(ctx, error):
         if isinstance(error, MissingPermissions):
