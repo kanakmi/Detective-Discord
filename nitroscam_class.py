@@ -35,7 +35,7 @@ class NitroScam:
         # check if the string contains a url
         if(len(url) == 0):
             return 0
-        
+
         splitted = url[0].split("/")
         domain = splitted[2]
 
@@ -52,11 +52,10 @@ class NitroScam:
 
         if sim < 5:
             return 1
-        else:
-            # if message contains a url and words discord and nitro, then it could be a scam
-            message = message.split()
-            if "discord" in message and "nitro" in message:
-                return 2
+        # if message contains a url and words discord and nitro, then it could be a scam
+        message = message.split()
+        if "discord" in message and "nitro" in message:
+            return 2
     
     def addSafeDomain(self, domain):
         if domain not in self.safe_domains:
