@@ -103,22 +103,17 @@ For fetching the Wikipedia summary, the bot uses the Wikipedia python library. <
 
 ## Libraries Used
 
-### Discord Libraries  
-- Discord
-- Option
-- Commands
-- MissingPermissions
-- Button, View
+### Discord Libraries                   ### Python Libraries
 
-### Python Libraries
-- requests 
-- wikipedia
-- pyjokes
-- os 
-- load_dotenv (dot environment for api)
-- json (api input format)
-- re (regular expression)
-- sqlite3 (database connectivity)
+- Discord                               - os   
+- Commands                              - pyjokes
+- Option                                - requests 
+- Button, View                          - wikipedia
+- MissingPermissions                    - json (api input format)
+                                        - re (regular expression)
+                                        - sqlite3 (database connectivity)
+                                        - load_dotenv (dot environment for api)
+                                        
 
 ## Steps to contribute:
 
