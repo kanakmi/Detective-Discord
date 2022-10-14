@@ -101,20 +101,27 @@ For fetching the Wikipedia summary, the bot uses the Wikipedia python library. <
 - Create a `.env` file and add your discord bot TOKEN. Adding NEWS_API, WEATHER_API KEYS is optional. Remember to remove their commands if you wish to not include them.
 - Run the bot using the command `python3 bot.py`
 
-## Libraries Used
+## Libraries Used 📚
 
-### Discord Libraries                   ### Python Libraries
+### Discord Libraries 🎮
 
-- Discord                               - os   
-- Commands                              - pyjokes
-- Option                                - requests 
-- Button, View                          - wikipedia
-- MissingPermissions                    - json (api input format)
-                                        - re (regular expression)
-                                        - sqlite3 (database connectivity)
-                                        - load_dotenv (dot environment for api)
+- Discord
+- Commands
+- Option
+- Button, View
+- MissingPermissions
+
+### Python Libraries 🐍
+
+- os                                        
+- pyjokes
+- requests 
+- wikipedia
+- json (api input format)
+- re (regular expression)
+- sqlite3 (database connectivity)
+- load_dotenv (dot environment for api)
                                         
-
 ## Steps to contribute:
 
 - Drop a :star: on the Github repository (optional)<br/>
